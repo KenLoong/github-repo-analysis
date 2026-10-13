@@ -1,53 +1,53 @@
-# GitHub Repo 报告
+# GitHub Repo Report
 
-输入一个 GitHub 仓库链接，按作者统计 commit / issue / PR / 评论，并可调用 DeepSeek 判断 bug 类型以及 commit 是否有意义。
+Paste a GitHub repository URL to get per-author statistics for commits, issues, pull requests and comments, with optional DeepSeek-powered analysis of bug types and whether each commit is meaningful.
 
-## 功能
+## Features
 
-- 作者汇总：每位作者的 commit、issue、PR、评论数量
-- Commits / Issues / Pull Requests / 评论 明细，可按作者筛选
-- Bug-fix PR 列表
-- 可选 AI 分析（DeepSeek）：bug 类型分类、commit 价值判断；关闭后只输出统计数字
+- Author summary: commit, issue, PR and comment counts per author
+- Detail tabs for Commits / Issues / Pull Requests / Comments, filterable by author
+- Bug-fix PR list
+- Optional AI analysis (DeepSeek): bug type classification and commit value assessment; turn it off to get statistics only
 
-## 快速开始
+## Quick start
 
-依赖：Python 3（仅标准库，无需安装包）。
+Requirements: Python 3 (standard library only, nothing to install).
 
 ```bash
-./start.sh          # 默认端口 8000
-./start.sh 9000     # 指定端口
+./start.sh          # default port 8000
+./start.sh 9000     # custom port
 ```
 
-首次运行会从 `config.example.json` 生成 `config.json`，填入密钥后再次运行，然后访问 http://127.0.0.1:8000 。
+On first run the script creates `config.json` from `config.example.json`. Fill in your keys, run it again, then open <http://127.0.0.1:8000>.
 
-## 配置
+## Configuration
 
-`config.json`（已被 git 忽略，请勿提交）：
+`config.json` (git-ignored, never commit it):
 
-| 字段 | 说明 | 默认 |
+| Field | Description | Default |
 | --- | --- | --- |
-| `github_token` | GitHub Personal Access Token，用于提高 API 限额、读取私有仓库 | 空 |
-| `deepseek_api_key` | DeepSeek API Key，仅保存在服务端 | 空 |
-| `deepseek_model` | 使用的 DeepSeek 模型 | `deepseek-chat` |
-| `default_repo` | 页面默认填充的仓库 | 空 |
-| `max_commits` | 最多抓取的 commit 数 | 300 |
-| `max_items` | issue / PR 各自最多抓取数 | 300 |
-| `max_comment_pages` | 评论最多抓取页数（每页 100 条） | 20 |
+| `github_token` | GitHub personal access token; raises API rate limits and allows reading private repos | empty |
+| `deepseek_api_key` | DeepSeek API key, kept server-side only | empty |
+| `deepseek_model` | DeepSeek model to use | `deepseek-chat` |
+| `default_repo` | Repository pre-filled in the form | empty |
+| `max_commits` | Maximum commits to fetch | 300 |
+| `max_items` | Maximum issues and PRs to fetch (each) | 300 |
+| `max_comment_pages` | Maximum comment pages to fetch (100 per page) | 20 |
 
-## 项目结构
+## Project structure
 
+```text
+├── index.html            Page markup
+├── app.js                Frontend: calls the GitHub API, aggregates stats, renders the report
+├── style.css             Styles
+├── server.py             Local server: static files + /api/config + /api/llm (DeepSeek proxy)
+├── start.sh              Launch script
+└── config.example.json   Configuration template
 ```
-├── index.html            页面
-├── app.js                前端逻辑：调用 GitHub API、聚合统计、渲染报告
-├── style.css             样式
-├── server.py             本地服务：静态文件 + /api/config + /api/llm（DeepSeek 代理）
-├── start.sh              启动脚本
-└── config.example.json   配置模板
-```
 
-## 安全说明
+## Security notes
 
-- 服务只监听 `127.0.0.1`，仅限本机访问。
-- `config.json` 不会作为静态文件对外提供；`/api/config` 返回给浏览器时会去掉 `deepseek_api_key`，AI 请求由 `server.py` 代理转发。
-- `github_token` 会下发到浏览器，用于前端直接请求 GitHub API，请使用最小权限（只读）的 token。
-- 切勿将 `config.json` 或任何密钥提交到仓库。
+- The server binds to `127.0.0.1` only, so it is reachable from your machine alone.
+- `config.json` is never served as a static file. `/api/config` strips `deepseek_api_key` before responding, and AI requests are proxied through `server.py`.
+- `github_token` is sent to the browser so the frontend can call the GitHub API directly. Use a minimal, read-only token.
+- Never commit `config.json` or any secret to the repository.
