@@ -1,0 +1,29 @@
+# 密钥 / 本地配置(只提交 config.example.json)
+config.json
+.env
+.env.*
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Node(如后续引入构建工具)
+node_modules/
+npm-debug.log*
+
+# 日志与临时文件
+*.log
+*.tmp
+*.swp
+
+# 操作系统 / 编辑器
+.DS_Store
+.idea/
+.vscode/
+
+# Claude Code 本地设置
+.claude/settings.local.json

@@ -1,0 +1,9 @@
+{
+  "github_token": "",
+  "deepseek_api_key": "",
+  "deepseek_model": "deepseek-chat",
+  "default_repo": "",
+  "max_commits": 300,
+  "max_items": 300,
+  "max_comment_pages": 20
+}

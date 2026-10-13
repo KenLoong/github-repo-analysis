@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitHub Repo 报告</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>GitHub Repo 报告</h1>
+  <p class="sub">按作者统计 commit / issue / PR / 评论,并用 DeepSeek 判断 bug 类型与 commit 是否有意义</p>
+</header>
+
+<main>
+  <section class="card" id="form">
+    <label>Repo 链接
+      <input id="repo" type="text" placeholder="https://github.com/owner/repo" autocomplete="off">
+    </label>
+    <div class="row">
+      <label>GitHub Token <span class="hint" id="ghSaved"></span>
+        <input id="ghToken" type="password" placeholder="在 config.json 中配置" autocomplete="off">
+      </label>
+      <label>DeepSeek API Key <span class="hint" id="gmSaved"></span>
+        <input id="gmKey" type="text" value="仅服务端保存,不在页面显示" disabled>
+      </label>
+    </div>
+    <details>
+      <summary>高级设置</summary>
+      <div class="row">
+        <label>DeepSeek 模型
+          <input id="model" type="text" value="deepseek-chat">
+        </label>
+        <label>最多 commit 数
+          <input id="maxCommits" type="number" value="300" min="1">
+        </label>
+        <label>最多 issue/PR 数(各自)
+          <input id="maxItems" type="number" value="300" min="1">
+        </label>
+        <label>评论最多页数(每页100)
+          <input id="maxCommentPages" type="number" value="20" min="1">
+        </label>
+      </div>
+      <label class="inline"><input type="checkbox" id="useAI" checked> 使用 DeepSeek 做 AI 判断(关闭则只出统计数字)</label>
+    </details>
+    <div class="actions">
+      <button id="go">生成报告</button>
+      <span id="status" class="status"></span>
+    </div>
+    <div class="bar" id="barWrap" hidden><div id="bar"></div></div>
+    <div id="error" class="error" hidden></div>
+  </section>
+
+  <section id="report" hidden>
+    <h2 id="repoTitle"></h2>
+    <nav class="tabs">
+      <button data-tab="authors" class="active">作者汇总</button>
+      <button data-tab="commits">Commits</button>
+      <button data-tab="issues">Issues</button>
+      <button data-tab="prs">Pull Requests</button>
+      <button data-tab="comments">评论</button>
+      <button data-tab="bugfix">Bug-fix PR</button>
+    </nav>
+    <div class="filter" id="filterBar" hidden>
+      <label>作者 <select id="authorFilter"></select></label>
+    </div>
+    <div id="view"></div>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
